@@ -12,13 +12,11 @@ Nike Vintage in the result.
 */
 -- Question #1 Solution:
 SELECT
-CASE WHEN products.product_name LIKE 'Vintage%' THEN
-'Vinatge'
-ELSE 'Nike Official'
-END AS Business_unit,
-products.product_name,
-(products.retail_priceproducts.
-cost)/products.retail_price AS profit_margin
+  CASE WHEN products.product_name LIKE 'Vintage%' THEN 'Vinatge'
+    ELSE 'Nike Official'
+    END AS Business_unit,
+  products.product_name,
+  (products.retail_price - products.cost)/products.retail_price AS profit_margin
 FROM products;
 
 
@@ -29,18 +27,16 @@ there any centers that stand out?
 */
 -- Question #2 Solution:
 SELECT
-distribution_centers.name,
-SUM(products.retail_price-products.cost)/SUM(products.retail_pri
-ce) AS profit_margin
-FROM products
+  distribution_centers.name,
+  SUM(products.retail_price-products.cost)/SUM(products.retail_price) AS profit_margin
+FROM 
+  products
 INNER JOIN
-distribution_centers
+  distribution_centers
 ON
-distribution_centers.distribution_center_id=products.distributio
-n_center_id
+  distribution_centers.distribution_center_id=products.distribution_center_id
 GROUP BY
 distribution_centers.name;
-
 
 /*
 Question #3:
@@ -52,17 +48,18 @@ Pro Tights, Nike Dri-FIT Shorts, and Nike Legend Tee
 */
 -- Question #3 Solution:
 SELECT
-products.product_name,
-SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_p
-rice) AS profit_margin
-FROM order_items
+  products.product_name,
+  SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_price) AS profit_margin
+FROM 
+  order_items
 INNER JOIN
-products
-ON order_items.product_id=productS.product_id
-WHERE products.product_name IN ('Nike Pro Tights', 'Nike Dri-FIT
-Shorts', 'Nike Legend Tee')
+  products
+ON 
+  order_items.product_id=productS.product_id
+WHERE 
+  products.product_name IN ('Nike Pro Tights', 'Nike Dri-FIT Shorts', 'Nike Legend Tee')
 GROUP BY
-products.product_name;
+  products.product_name;
 
 
 /*
@@ -73,22 +70,22 @@ Nike Official order items.
 */
 -- Question #4 Solution:
 SELECT
-DISTINCT(products.product_name),
-CASE WHEN order_items.created_at <'2021-05-01' THEN 'PRE-MAY'
-ELSE 'POST-MAY'
-END AS may21_split,
-SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_p
-rice) AS profit_margin
-FROM order_items
+	DISTINCT(products.product_name),
+	CASE WHEN order_items.created_at <'2021-05-01' THEN 'PRE-MAY'
+		ELSE 'POST-MAY'
+	END AS may21_split,
+	SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_price) AS profit_margin
+FROM 
+	order_items
 FULL JOIN
-products
-ON order_items.product_id=productS.product_id
+	products
+ON 
+	order_items.product_id=productS.product_id
 GROUP BY
-products.product_name,
-may21_split
+	products.product_name,
+	may21_split
 HAVING
-SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_p
-rice) IS NOT NULL;
+	SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_price) IS NOT NULL;
 
 
 /*
@@ -98,26 +95,31 @@ and Nike Vintage products in a single view
 */
 -- Question #5 Solution:
 SELECT
-products.product_name,
-SUM(order_items_vintage.sale_price-products.cost)/SUM(order_item
-s_vintage.sale_price) AS profit_margin
-FROM order_items_vintage
+	products.product_name,
+	SUM(order_items_vintage.sale_price-products.cost)/SUM(order_items_vintage.sale_price) AS profit_margin
+FROM 
+	order_items_vintage
 INNER JOIN
-products
-ON order_items_vintage.product_id=products.product_id
+	products
+ON 
+	order_items_vintage.product_id=products.product_id
 GROUP BY
-products.product_name
+	products.product_name
+  
 UNION ALL
+
 SELECT
-products.product_name,
-SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_p
-rice) AS profit_margin
-FROM order_items
+	products.product_name,
+	SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_price) AS profit_margin
+FROM 
+	order_items
 INNER JOIN
-products
-ON order_items.product_id=products.product_id
+	products
+ON 
+	order_items.product_id=products.product_id
 GROUP BY
-products.product_name;
+	products.product_name;
+
 
 
 /*
@@ -129,27 +131,33 @@ Include the product name, profit margin, and what business unit
 */
 -- Question #6 Solution:
 SELECT
-'Nike Vintage' AS Business_Unit,
-products.product_name,
-SUM(order_items_vintage.sale_price-products.cost)/SUM(order_item
-s_vintage.sale_price) AS profit_margin
-FROM order_items_vintage
+	'Nike Vintage' AS Business_Unit,
+	products.product_name,
+	SUM(order_items_vintage.sale_price-products.cost)/SUM(order_items_vintage.sale_price) AS profit_margin
+FROM 
+	order_items_vintage
 INNER JOIN
-products
-ON order_items_vintage.product_id=products.product_id
+	products
+ON 
+	order_items_vintage.product_id=products.product_id
 GROUP BY
-products.product_name
+	products.product_name
+  
 UNION ALL
+
 SELECT
-'Nike Official' AS Business_Unit,
-products.product_name,
-SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_p
-rice) AS profit_margin
-FROM order_items
+	'Nike Official' AS Business_Unit,
+	products.product_name,
+	SUM(order_items.sale_price-products.cost)/SUM(order_items.sale_price) AS profit_margin
+FROM
+	order_items
 INNER JOIN
-products
-ON order_items.product_id=products.product_id
+	products
+ON 
+	order_items.product_id=products.product_id
 GROUP BY
-products.product_name
-ORDER BY profit_margin DESC
-LIMIT 10;
+	products.product_name
+ORDER BY 
+	profit_margin DESC
+LIMIT 
+	10;
